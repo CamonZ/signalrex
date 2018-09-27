@@ -13,7 +13,7 @@ defmodule Signalrex.Mixfile do
       package: package(),
       deps: deps(),
       docs: [
-        main: "readme", 
+        main: "readme",
         source_ref: "v#{@version}",
         extras: ["README.md"],
         source_url: "https://github.com/mendrugory/signalrex"
@@ -31,13 +31,13 @@ defmodule Signalrex.Mixfile do
     """
     Signalrex is a signalr client library written in Elixir.
     """
-  end  
+  end
 
   defp deps do
     [
       {:poison, "~> 3.1"},
       {:tesla, "~> 0.9.0"},
-      {:enchufeweb, github: "mendrugory/enchufeweb"},
+      {:enchufeweb, github: "CamonZ/enchufeweb"},
       {:earmark, ">= 0.0.0", only: :dev},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
@@ -48,5 +48,5 @@ defmodule Signalrex.Mixfile do
      maintainers: ["Gonzalo Jiménez Fuentes"],
      licenses: ["MIT License"],
      links: %{"GitHub" => "https://github.com/mendrugory/signalrex"}]
-  end  
+  end
 end
