@@ -35,7 +35,7 @@ defmodule Signalrex.Mixfile do
 
   defp deps do
     [
-      {:poison, "~> 3.1"},
+      {:jason, "~> 1.1.1"},
       {:tesla, "~> 0.9.0"},
       {:enchufeweb, github: "CamonZ/enchufeweb"},
       {:earmark, ">= 0.0.0", only: :dev},

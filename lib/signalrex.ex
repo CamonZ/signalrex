@@ -47,7 +47,7 @@ defmodule Signalrex do
       require Logger
       @behaviour Signalrex
 
-      plug(Tesla.Middleware.JSON)
+      plug(Tesla.Middleware.JSON, engine: Jason)
 
       @init_time 10
       @init_response_attempts 3
@@ -145,8 +145,6 @@ defmodule Signalrex do
       end
 
       defp do_negotiate(base_url, headers, query_params) do
-        Logger.info("Negotiating ...")
-
         response =
           get(negotiate_client(base_url, headers, query_params), "/negotiate")
 
@@ -169,8 +167,6 @@ defmodule Signalrex do
       end
 
       defp do_connect(base_url, query_params, ws_opts \\ %{conn_mode: :once}) do
-        Logger.info("Connecting ...")
-
         case build_transport_url(base_url, query_params) do
           {:ok, url} ->
             [
@@ -181,7 +177,7 @@ defmodule Signalrex do
                 |> Map.put(:client, self())
                 |> Map.put(
                   :init_message,
-                  Poison.encode(get_initial_message())
+                  Jason.encode!(get_initial_message())
                 )
             ]
             |> Signalrex.WSClient.start_link()
@@ -192,18 +188,7 @@ defmodule Signalrex do
       end
 
       defp do_start(base_url, headers, query_params) do
-        Logger.info("Starting ...")
-
-        response =
           get(start_client(base_url, headers, query_params), "/start")
-
-        case response.body do
-          %{"Response" => "started"} ->
-            Logger.info("Connection started.")
-
-          msg ->
-            Logger.error("Error: #{inspect(msg)}")
-        end
       end
 
       defp negotiate_client(base_url, headers, query_params) do
@@ -299,7 +284,7 @@ defmodule Signalrex do
       defp receive_init_response(args, attempts \\ @init_response_attempts) do
         receive do
           {:signalr_message, msg} ->
-            case Poison.decode(msg) do
+            case Jason.decode(msg) do
               {:ok, %{"S" => 1, "M" => []}} ->
                 base_url = Map.get(args, :url)
                 sh = Map.get(args, :start_headers)
